@@ -37,8 +37,22 @@ class ItemController extends Controller
             ->addIndexColumn()
             ->addColumn('action', function ($item) {
                 return '<a href="javascript:void(0)" class="btn btn-primary btn-sm">Edit</a>
-                        <a href="javascript:void(0)" class="btn btn-danger btn-sm">Delete</a>';
+                        <button command="show-modal" commandfor="dialog-delete" class="bg-red-500 hover:bg-red-700 text-red-50 py-2 px-4 rounded mb-3" data-item-id="' . $item->id . '">Delete</button>';
             })
             ->make(true);
+    }
+
+    public function destroy(Request $request)
+    {
+        $item = Item::find($request->id);
+        $item->delete();
+
+        return redirect()->route('items')->with('success', 'Item deleted successfully');
+    }
+
+    public function edit(Request $request)
+    {
+        $item = Item::find($request->id);
+        return response()->json($item);
     }
 }
