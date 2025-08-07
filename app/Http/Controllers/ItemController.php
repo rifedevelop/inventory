@@ -35,6 +35,12 @@ class ItemController extends Controller
         $items = Item::query();
         return datatables()->of($items)
             ->addIndexColumn()
+            ->addColumn('created_at', function ($item) {
+                return $item->created_at->format('d-m-Y H:i:s');
+            })
+            ->addColumn('updated_at', function ($item) {
+                return $item->updated_at->format('d-m-Y H:i:s');
+            })
             ->addColumn('action', function ($item) {
                 return '<a href="javascript:void(0)" class="btn btn-primary btn-sm">Edit</a>
                         <button command="show-modal" commandfor="dialog-delete" class="bg-red-500 hover:bg-red-700 text-red-50 py-2 px-4 rounded mb-3" data-item-id="' . $item->id . '">Delete</button>';
