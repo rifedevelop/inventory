@@ -163,11 +163,74 @@
 
                 ]
             });
+
+            // Form validation
+            $('form[action="{{ route("items.store") }}"]').on('submit', function(e) {
+                let isValid = true;
+                let errorMessages = [];
+
+                // Validate category name
+                const categoryName = $('#category-name').val().trim();
+                if (!categoryName) {
+                    isValid = false;
+                    errorMessages.push('Kategori harus diisi');
+                    $('#category-name').addClass('outline-red-500');
+                } else {
+                    $('#category-name').removeClass('outline-red-500');
+                }
+
+                // Validate item name
+                const itemName = $('#item-name').val().trim();
+                if (!itemName) {
+                    isValid = false;
+                    errorMessages.push('Nama item harus diisi');
+                    $('#item-name').addClass('outline-red-500');
+                } else {
+                    $('#item-name').removeClass('outline-red-500');
+                }
+
+                // Validate stock
+                const stock = $('#stock').val().trim();
+                if (!stock) {
+                    isValid = false;
+                    errorMessages.push('Stok harus diisi');
+                    $('#stock').addClass('outline-red-500');
+                } else if (isNaN(stock) || parseInt(stock) < 0) {
+                    isValid = false;
+                    errorMessages.push('Stok harus berupa angka positif');
+                    $('#stock').addClass('outline-red-500');
+                } else {
+                    $('#stock').removeClass('outline-red-500');
+                }
+
+                // If validation fails, prevent form submission and show errors
+                if (!isValid) {
+                    e.preventDefault();
+
+                    // Display error messages
+                    if (!$('.validation-errors').length) {
+                        const errorHtml = '<div class="validation-errors mt-4 p-3 bg-red-100 text-red-700 rounded"><ul>' +
+                            errorMessages.map(msg => '<li>' + msg + '</li>').join('') +
+                            '</ul></div>';
+                        $('form[action="{{ route("items.store") }}"]').prepend(errorHtml);
+                    } else {
+                        $('.validation-errors ul').html(errorMessages.map(msg => '<li>' + msg + '</li>').join(''));
+                    }
+                } else {
+                    // Remove error messages if validation passes
+                    $('.validation-errors').remove();
+                }
+            });
         });
 
         $('#items-table').on('click', 'button[data-item-id]', function() {
             var itemId = $(this).data('item-id');
             $('#dialog-delete').attr('commandfor', 'dialog-delete-' + itemId);
+        });
+
+        $('#items-table').on('click', 'button[data-item-id="edit"]', function() {
+            var itemId = $(this).data('item-id');
+            $('#dialog-edit').attr('commandfor', 'dialog-edit-' + itemId);
         });
     </script>
 
