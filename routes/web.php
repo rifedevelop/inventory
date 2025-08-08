@@ -22,6 +22,7 @@ Route::post('/items/delete', [ItemController::class, 'destroy'])->middleware(['a
 
 Route::get('/transactions', [TransactionController::class, 'index'])->middleware(['auth', 'verified'])->name('transactions');
 Route::get('/transactions/data', [TransactionController::class, 'data'])->middleware(['auth', 'verified'])->name('transactions.data');
+Route::post('/transactions/store', [TransactionController::class, 'store'])->middleware(['auth', 'verified'])->name('transactions.store');
 
 Route::get('/items', function () {
     return view('items');

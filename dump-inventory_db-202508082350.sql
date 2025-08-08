@@ -105,11 +105,17 @@ CREATE TABLE `items` (
   `item_name` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
   `code` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
   `stock` int NOT NULL,
+  `created_by` bigint unsigned NOT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `items_code_unique` (`code`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `items_code_unique` (`code`),
+  KEY `items_created_by_foreign` (`created_by`),
+  KEY `items_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `items_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  CONSTRAINT `items_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -118,7 +124,7 @@ CREATE TABLE `items` (
 
 LOCK TABLES `items` WRITE;
 /*!40000 ALTER TABLE `items` DISABLE KEYS */;
-INSERT INTO `items` VALUES (1,'M','Aqua','ITM080820250001',10,'2025-08-07 19:34:13','2025-08-07 19:34:13'),(2,'M','Lemineral','ITM080820250002',10,'2025-08-07 19:34:41','2025-08-07 19:34:41'),(3,'M','Aquviva','ITM080820250003',10,'2025-08-07 19:39:26','2025-08-07 19:39:26'),(4,'M','Prestine','ITM080820250004',20,'2025-08-07 19:41:21','2025-08-07 19:41:21'),(5,'M','Fit','ITM080820250005',10,'2025-08-07 19:42:21','2025-08-07 19:42:21'),(6,'M','Keren','ITM080820250006',10,'2025-08-07 19:43:55','2025-08-07 19:43:55'),(7,'M','Quari','ITM080820250007',10,'2025-08-07 19:49:21','2025-08-07 19:49:21');
+INSERT INTO `items` VALUES (33,'Makanan','Konguan','ITM080820250002',31,1,NULL,'2025-08-08 03:52:32','2025-08-08 03:52:32'),(39,'Makanan','Nissin Wafer','ITM080820250003',1,1,1,'2025-08-08 09:47:25','2025-08-08 09:48:26'),(40,'Aqua','Aqua','ITM080820250004',10,1,NULL,'2025-08-08 09:47:47','2025-08-08 09:47:47');
 /*!40000 ALTER TABLE `items` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -194,7 +200,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -203,7 +209,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(6,'2025_08_07_031011_create_items_table',2);
+INSERT INTO `migrations` VALUES (1,'0001_01_01_000000_create_users_table',1),(2,'0001_01_01_000001_create_cache_table',1),(3,'0001_01_01_000002_create_jobs_table',1),(7,'2025_08_07_031011_create_items_table',2),(10,'2025_08_08_123018_create_transactions_table',3);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -257,8 +263,44 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('3ACJubNKCvZfRxGDPxatiBnE9aJfbraYOM2xcl9u',1,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRlZqUkM2VTZYSDVNa1htNkVFTVV4S3JUcmJnazlMY1dwZjRyMXE1OSI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjEwMzoiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2l0ZW1zP190b2tlbj1GVmpSQzZVNlhINU1rWG02RUVNVXhLclRyYmdrOUxjV3BmNHIxcTU5JmNhdGVnb3J5PSZpdGVtX25hbWU9JnN0b2NrPSI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjE7fQ==',1754624986);
+INSERT INTO `sessions` VALUES ('9gy2v1Ei9rkcLUJuAdX3ZOJpLS3YRcaOhoODYmjY',1,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36 Edg/138.0.0.0','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiNTg4djZsNU03MWxINlhkMkxTcm9HNTdmWHJreTI4NmpremR1eGJpQiI7czozOiJ1cmwiO2E6MDp7fXM6OToiX3ByZXZpb3VzIjthOjE6e3M6MzoidXJsIjtzOjM0OiJodHRwOi8vMTI3LjAuMC4xOjgwMDAvdHJhbnNhY3Rpb25zIjt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9',1754671774);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `transactions`
+--
+
+DROP TABLE IF EXISTS `transactions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `transactions` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `item_id` bigint unsigned NOT NULL,
+  `type` tinyint NOT NULL,
+  `qty` int NOT NULL,
+  `created_by` bigint unsigned NOT NULL,
+  `updated_by` bigint unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `transactions_item_id_foreign` (`item_id`),
+  KEY `transactions_created_by_foreign` (`created_by`),
+  KEY `transactions_updated_by_foreign` (`updated_by`),
+  CONSTRAINT `transactions_created_by_foreign` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`),
+  CONSTRAINT `transactions_item_id_foreign` FOREIGN KEY (`item_id`) REFERENCES `items` (`id`),
+  CONSTRAINT `transactions_updated_by_foreign` FOREIGN KEY (`updated_by`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `transactions`
+--
+
+LOCK TABLES `transactions` WRITE;
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+INSERT INTO `transactions` VALUES (1,39,2,1,1,NULL,'2025-08-08 09:48:06','2025-08-08 09:48:06'),(2,39,2,99,1,NULL,'2025-08-08 09:48:26','2025-08-08 09:48:26');
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -309,4 +351,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-08 10:50:22
+-- Dump completed on 2025-08-08 23:50:06

@@ -48,7 +48,7 @@ class ItemController extends Controller
         // Item::create($request->all());
         // $item = Item::create($request->all());
         $item = Item::create([
-            'code' => 'ITM' . date('dmY') . str_pad(DB::table('items')->count() + 1, 4, '0', STR_PAD_LEFT),
+            'code' => 'ITM' . date('dmY') . str_pad($this->getNextItemNumber(), 4, '0', STR_PAD_LEFT),
             'category' => $request->category,
             'item_name' => $request->item_name,
             'stock' => $request->stock,
@@ -90,5 +90,29 @@ class ItemController extends Controller
         $item->delete();
 
         return redirect()->route('items')->with('success', 'Item deleted successfully');
+    }
+
+    /**
+     * Get the next item number for generating the item code
+     * This method ensures sequential numbering even if items are deleted
+     */
+    private function getNextItemNumber()
+    {
+        // Get the current date format for the code prefix
+        $currentDatePrefix = 'ITM' . date('dmY');
+
+        // Find the highest number used in existing codes with the same date prefix
+        $lastItem = Item::where('code', 'like', $currentDatePrefix . '%')
+            ->orderBy('code', 'desc')
+            ->first();
+
+        if ($lastItem) {
+            // Extract the numeric part from the code
+            $lastNumber = (int) substr($lastItem->code, strlen($currentDatePrefix));
+            return $lastNumber + 1;
+        }
+
+        // If no items exist with today's date prefix, start with 1
+        return 1;
     }
 }

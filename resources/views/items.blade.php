@@ -38,7 +38,7 @@
             <div tabindex="0" class="flex min-h-full items-end justify-center p-4 text-center focus:outline-none sm:items-center sm:p-0">
                 <el-dialog-panel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 sm:w-full sm:max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95">
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <h5 class="text-lg font-medium leading-6 text-gray-900">Add New Item</h5>
+                        <h5 class="text-lg font-medium leading-6 text-gray-900" id="dialog-title">Add New Item</h5>
 
                         <form id="item-form">
                             @csrf
@@ -173,6 +173,7 @@
             $('#item-form').removeAttr('data-item-action');
             let action = $(this).data('item-action');
             let itemId = $(this).data('item-id');
+            $('#dialog-title').text('Add New Item');
 
             $('#item-form')[0].reset();
 
@@ -186,6 +187,7 @@
             $('#item-btn-submit').attr('data-item-action', 'edit');
             $('#item-form').attr('data-item-action', 'edit');
             $('#item-id').val(itemId);
+            $('#dialog-title').text('Edit Item');
 
             $.ajax({
                 url: "{{ route('items.edit') }}",

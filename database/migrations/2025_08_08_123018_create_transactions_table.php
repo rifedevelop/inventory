@@ -15,10 +15,12 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('item_id')->unsigned();
             $table->foreign('item_id')->references('id')->on('items');
-            $table->enum('type', ['in', 'out']);
+            $table->tinyInteger('type');
             $table->integer('qty');
             $table->bigInteger('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users');
+            $table->bigInteger('updated_by')->unsigned()->nullable();
+            $table->foreign('updated_by')->references('id')->on('users');
             $table->timestamps();
         });
     }
