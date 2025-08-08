@@ -7,7 +7,9 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <button command="show-modal" commandfor="dialog" data-item-action="add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3">Add New</button>
+            <button command="show-modal" commandfor="dialog" data-item-action="add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded mb-3">Add Incoming Stock</button>
+            <button command="show-modal" commandfor="dialog" data-item-action="add" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 mr-2 rounded mb-3">Add Outgoing Stock</button>
+
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -15,12 +17,10 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Category</th>
-                                <th>Code</th>
-                                <th>Name</th>
-                                <th>Stock</th>
+                                <th>Item</th>
+                                <th>Qty</th>
                                 <th>Created At</th>
-                                <th>Updated At</th>
+                                <th>Created By</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -127,7 +127,8 @@
             $('#items-table').DataTable({
                 processing: true,
                 serverSide: true,
-                ajax: "{{ route('items.data') }}",
+                ajax: "{{ route('transactions.data') }}",
+
                 columns: [{
                         data: 'DT_RowIndex',
                         name: 'DT_RowIndex',
@@ -135,29 +136,20 @@
                         searchable: false
                     },
                     {
-                        data: 'category',
-                        name: 'category'
-                    },
-                    {
-                        data: 'code',
-                        name: 'code'
-                    },
-
-                    {
                         data: 'item_name',
                         name: 'item_name'
                     },
                     {
-                        data: 'stock',
-                        name: 'stock'
+                        data: 'qty',
+                        name: 'qty'
                     },
                     {
                         data: 'created_at',
                         name: 'created_at'
                     },
                     {
-                        data: 'updated_at',
-                        name: 'updated_at'
+                        data: 'created_by',
+                        name: 'created_by'
                     },
                     {
                         data: 'action',
@@ -165,6 +157,7 @@
                         orderable: false,
                         searchable: false
                     },
+
                 ]
             });
         });

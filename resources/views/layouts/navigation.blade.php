@@ -18,6 +18,9 @@
                     <x-nav-link :href="route('items')" :active="request()->routeIs('items')">
                         {{ __('Items') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('transactions')" :active="request()->routeIs('transactions')">
+                        {{ __('Transactions') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -47,7 +50,7 @@
 
                             <x-dropdown-link :href="route('logout')"
                                 onclick="event.preventDefault();
-                                                this.closest('form').submit();">
+                                this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>

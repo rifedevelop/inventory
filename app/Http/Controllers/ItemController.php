@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -30,7 +31,7 @@ class ItemController extends Controller
                 return $item->updated_at; //->format('d-m-Y H:i:s');
             })
             ->addColumn('action', function ($item) {
-                return '<button command="show-modal" commandfor="dialog" class="text-red-50 py-2 px-4 rounded mb-3" data-item-action="edit" data-item-id="' . $item->id . '">Edit</button>
+                return '<button type="button" command="show-modal" commandfor="dialog" data-item-action="edit" data-item-id="' . $item->id . '" class="text-red-50 py-2 px-4 rounded mb-3">Edit</button>
                         <button command="show-modal" commandfor="dialog-delete" class="text-red-50 py-2 px-4 rounded mb-3" data-item-id="' . $item->id . '">Delete</button>';
             })
             ->make(true);
@@ -51,6 +52,7 @@ class ItemController extends Controller
             'category' => $request->category,
             'item_name' => $request->item_name,
             'stock' => $request->stock,
+            'created_by' => Auth::user()->id,
             'created_at' => Carbon::now(),
             'updated_at' => Carbon::now(),
         ]);
