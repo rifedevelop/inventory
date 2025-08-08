@@ -19,6 +19,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Item</th>
+                                <th>Type</th>
                                 <th>Qty</th>
                                 <th>Created At</th>
                                 <th>Created By</th>
@@ -114,6 +115,11 @@
                         data: 'item_name',
                         name: 'item_name'
                     },
+                    {
+                        data: 'transaction_type',
+                        name: 'transaction_type'
+                    },
+
                     {
                         data: 'qty',
                         name: 'qty'

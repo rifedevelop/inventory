@@ -28,6 +28,9 @@ class TransactionController extends Controller
             ->addColumn('created_at', function ($item) {
                 return $item->created_at;
             })
+            ->addColumn('transaction_type', function ($item) {
+                return $item->type == 1 ? 'In' : 'Out';
+            })
             ->addColumn('item_name', function ($item) {
                 return $item->item->item_name;
             })
@@ -49,7 +52,7 @@ class TransactionController extends Controller
         ]);
 
         $item = item::where('id', $request->item_id)->first();
-        if ($item->stock < $request->qty) {
+        if ($request->transaction_type == 2 && $item->stock < $request->qty) {
             // return redirect()->route('transactions')->with('error', 'Stock not enough');
             return response()->json(['error' => 'Stock not enough'], 200);
         }
