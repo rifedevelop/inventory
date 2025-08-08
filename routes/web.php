@@ -15,6 +15,9 @@ Route::get('/dashboard', function () {
 Route::get('/items', [ItemController::class, 'index'])->middleware(['auth', 'verified'])->name('items');
 Route::post('/items', [ItemController::class, 'store'])->middleware(['auth', 'verified'])->name('items.store');
 Route::get('/items/data', [ItemController::class, 'data'])->middleware(['auth', 'verified'])->name('items.data');
+Route::post('/items/edit', [ItemController::class, 'edit'])->middleware(['auth', 'verified'])->name('items.edit');
+Route::post('/items/update', [ItemController::class, 'update'])->middleware(['auth', 'verified'])->name('items.update');
+Route::post('/items/delete', [ItemController::class, 'destroy'])->middleware(['auth', 'verified'])->name('items.destroy');
 
 Route::get('/items', function () {
     return view('items');

@@ -6,23 +6,22 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-5xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <button command="show-modal" commandfor="dialog" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-3">Add New</button>
 
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <table id="items-table" class="table-auto bg-white">
+                    <table id="items-table" class="display">
                         <thead>
                             <tr>
                                 <th>No</th>
                                 <th>Category</th>
+                                <th>Code</th>
                                 <th>Name</th>
                                 <th>Stock</th>
                                 <th>Created At</th>
                                 <th>Updated At</th>
                                 <th>Action</th>
-
-
                             </tr>
                         </thead>
                     </table>
@@ -41,7 +40,7 @@
                     <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                         <h5 class="text-lg font-medium leading-6 text-gray-900">Add New Item</h5>
 
-                        <form action="{{ route('items.store') }}" method="POST">
+                        <form id="item-form">
                             @csrf
 
                             <div class="space-y-12">
@@ -77,7 +76,8 @@
                             <div class="mt-6 flex items-center justify-end gap-x-6">
                                 <button command="close" commandfor="dialog" type="button" class="text-sm/6 font-semibold text-gray-900">Cancel</button>
 
-                                <button type="submit" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+                                <button id="item-btn-submit" type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+
                             </div>
                         </form>
                     </div>
@@ -113,7 +113,13 @@
                         </div>
                     </div>
                     <div class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
-                        <button type="button" command="close" commandfor="dialog-delete" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
+                        <form id="delete-form">
+                            <input type="hidden" name="id" id="id-delete">
+
+                            <button id="delete-btn" type="button" class="inline-flex w-full justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-red-500 sm:ml-3 sm:w-auto">Delete</button>
+
+                        </form>
+
 
                         <button type="button" command="close" commandfor="dialog-delete" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancel</button>
                     </div>
@@ -139,6 +145,11 @@
                         name: 'category'
                     },
                     {
+                        data: 'code',
+                        name: 'code'
+                    },
+
+                    {
                         data: 'item_name',
                         name: 'item_name'
                     },
@@ -160,77 +171,144 @@
                         orderable: false,
                         searchable: false
                     },
-
                 ]
             });
+        });
 
-            // Form validation
-            $('form[action="{{ route("items.store") }}"]').on('submit', function(e) {
-                let isValid = true;
-                let errorMessages = [];
+        // Form validation
+        $('#item-form').on('click', '#item-btn-submit', function(e) {
+            // e.preventDefault();
 
-                // Validate category name
-                const categoryName = $('#category-name').val().trim();
-                if (!categoryName) {
-                    isValid = false;
-                    errorMessages.push('Kategori harus diisi');
-                    $('#category-name').addClass('outline-red-500');
-                } else {
-                    $('#category-name').removeClass('outline-red-500');
-                }
+            let isValid = true;
+            let errorMessages = [];
 
-                // Validate item name
-                const itemName = $('#item-name').val().trim();
-                if (!itemName) {
-                    isValid = false;
-                    errorMessages.push('Nama item harus diisi');
-                    $('#item-name').addClass('outline-red-500');
-                } else {
-                    $('#item-name').removeClass('outline-red-500');
-                }
+            // Validate category name
+            const categoryName = $('#category-name').val().trim();
+            if (!categoryName) {
+                isValid = false;
+                errorMessages.push('Kategori harus diisi');
+                $('#category-name').addClass('border-red-500 focus:border-red-500 focus:ring-red-500');
+                $('#category-name').after('<span class="text-red-500 text-xs">Kategori harus diisi</span>');
 
-                // Validate stock
-                const stock = $('#stock').val().trim();
-                if (!stock) {
-                    isValid = false;
-                    errorMessages.push('Stok harus diisi');
-                    $('#stock').addClass('outline-red-500');
-                } else if (isNaN(stock) || parseInt(stock) < 0) {
-                    isValid = false;
-                    errorMessages.push('Stok harus berupa angka positif');
-                    $('#stock').addClass('outline-red-500');
-                } else {
-                    $('#stock').removeClass('outline-red-500');
-                }
+            } else {
+                $('#category-name').removeClass('outline-red-500');
+            }
 
-                // If validation fails, prevent form submission and show errors
-                if (!isValid) {
-                    e.preventDefault();
+            // Validate item name
+            const itemName = $('#item-name').val().trim();
+            if (!itemName) {
+                isValid = false;
+                errorMessages.push('Nama item harus diisi');
+                $('#item-name').addClass('border-red-500 focus:border-red-500 focus:ring-red-500');
+                $('#item-name').after('<span class="text-red-500 text-xs">Nama item harus diisi</span>');
+            } else {
+                $('#item-name').removeClass('border-red-500 focus:border-red-500 focus:ring-red-500');
+            }
 
-                    // Display error messages
-                    if (!$('.validation-errors').length) {
-                        const errorHtml = '<div class="validation-errors mt-4 p-3 bg-red-100 text-red-700 rounded"><ul>' +
-                            errorMessages.map(msg => '<li>' + msg + '</li>').join('') +
-                            '</ul></div>';
-                        $('form[action="{{ route("items.store") }}"]').prepend(errorHtml);
-                    } else {
-                        $('.validation-errors ul').html(errorMessages.map(msg => '<li>' + msg + '</li>').join(''));
+            // Validate stock
+            const stock = $('#stock').val().trim();
+            if (!stock) {
+                isValid = false;
+                errorMessages.push('Stok harus diisi');
+                $('#stock').addClass('outline-red-500');
+            } else if (isNaN(stock) || parseInt(stock) < 0) {
+                isValid = false;
+                errorMessages.push('Stok harus berupa angka positif');
+                $('#category-name').addClass('border-red-500 focus:border-red-500 focus:ring-red-500');
+            } else {
+                $('#stock').removeClass('outline-red-500');
+            }
+
+            // If validation fails, prevent form submission and show errors
+            if (!isValid) {
+                e.preventDefault();
+
+                // Display error messages
+                // if (!$('.validation-errors').length) {
+                //     const errorHtml = '<div class="validation-errors mt-4 p-3 bg-red-100 text-red-700 rounded"><ul>' +
+                //         errorMessages.map(msg => '<li>' + msg + '</li>').join('') +
+                //         '</ul></div>';
+                //     $('form[action="{{ route("items.store") }}"]').prepend(errorHtml);
+                // } else {
+                //     $('.validation-errors ul').html(errorMessages.map(msg => '<li>' + msg + '</li>').join(''));
+                // }
+            } else {
+                // Remove error messages if validation passes
+                $('.validation-errors').remove();
+
+                $.ajax({
+                    url: "{{ route('items.store') }}",
+                    type: 'post',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        category: categoryName,
+                        item_name: itemName,
+                        stock: stock
+                    },
+                    success: function(data) {
+                        console.log(data);
+                        // Refresh tabel setelah berhasil menambah
+                        $('#items-table').DataTable().ajax.reload();
+
+                        // Tutup dialog add
+                        const dialog = document.getElementById("dialog-add");
+                        dialog.close();
                     }
-                } else {
-                    // Remove error messages if validation passes
-                    $('.validation-errors').remove();
-                }
-            });
+                });
+
+            }
         });
 
         $('#items-table').on('click', 'button[data-item-id]', function() {
             var itemId = $(this).data('item-id');
+
+            $('#id-delete').val(itemId);
             $('#dialog-delete').attr('commandfor', 'dialog-delete-' + itemId);
         });
 
-        $('#items-table').on('click', 'button[data-item-id="edit"]', function() {
+        $('#delete-form').on('click', '#delete-btn', function(e) {
+            var itemId = $('#id-delete').val();
+            console.log(itemId);
+
+            $.ajax({
+                url: "{{ route('items.destroy') }}",
+                type: 'post',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: itemId
+                },
+                success: function(data) {
+                    console.log(data);
+                    // Refresh tabel setelah berhasil menghapus
+                    $('#items-table').DataTable().ajax.reload();
+
+                    // Tutup dialog delete
+                    const dialog = document.getElementById("dialog-delete");
+                    dialog.close();
+                    // document.querySelector('[command="close"][commandfor="dialog-delete"]').click();
+                }
+            });
+        });
+
+        $('#items-table').on('click', 'button[data-item-action="edit"]', function() {
             var itemId = $(this).data('item-id');
             $('#dialog-edit').attr('commandfor', 'dialog-edit-' + itemId);
+
+            $.ajax({
+                url: "{{ route('items.edit') }}",
+                type: 'post',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    id: itemId
+                },
+                success: function(data) {
+                    console.log(data.category);
+                    // Set nilai input form dengan data item
+                    $('#category-name').val(data.category);
+                    $('#item-name').val(data.item_name);
+                    $('#stock').val(data.stock);
+                }
+            });
         });
     </script>
 
